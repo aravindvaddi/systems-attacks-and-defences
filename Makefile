@@ -18,4 +18,4 @@ test3: giftcardreader
 	./giftcardreader 1 part2/hang.gft
 
 clean:
-	rm giftcardreader
+	rm giftcardreader giftcardreader.gcno

@@ -10,7 +10,10 @@
 #include "giftcard.h"
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
+#include <stdlib.h>
+
+int get_gift_card_value(struct this_gift_card *);
 
 // interpreter for THX-1138 assembly
 void animate(char *msg, unsigned char *program) {
