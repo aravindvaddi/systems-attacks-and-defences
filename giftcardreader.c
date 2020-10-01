@@ -28,7 +28,7 @@ void animate(char *msg, unsigned char *program) {
             case 0x00:
                 break;
             case 0x01:
-                regs[arg1] = *mptr;
+                if (arg1 >= 0 && arg1 <= 15) regs[arg1] = *mptr;
                 break;
             case 0x02:
                 *mptr = regs[arg1];
@@ -53,7 +53,7 @@ void animate(char *msg, unsigned char *program) {
             case 0x08:
                 goto done;
             case 0x09:
-                pc += (char)arg1;
+                pc += (unsigned char)arg1;
                 break;
             case 0x10:
                 if (zf) pc += (char)arg1;
@@ -184,6 +184,11 @@ struct this_gift_card *gift_card_reader(FILE *input_fd) {
 		struct gift_card_data *gcd_ptr;
 		/* JAC: Why aren't return types checked? */
 		fread(&ret_val->num_bytes, 4,1, input_fd);
+
+		if (ret_val->num_bytes < 0) {
+			printf("Invalid gift card\n");
+			exit(0);
+		}
 
 		// Make something the size of the rest and read it in
 		ptr = malloc(ret_val->num_bytes);
