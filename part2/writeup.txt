@@ -1,0 +1,53 @@
+BUG WRITE UP
+
+crash1.gft
+
+Note: Line numbers are as of this commit.
+
+Bug:
+    Value of ret_val->num_bytes after fread(&ret_val->num_bytes, 4,1, input_fd) (Line 186) is executed in giftcardreader.c is not checked
+
+Exploit:
+    Sending in a negative value '0xffffffff' to be read into ret_val->num_bytes causes ptr to be set after ptr = malloc(ret_val->num_bytes) (Line 189) is executed.
+    The next line, fread(ptr, ret_val->num_bytes, 1, input_fd) (Line 190), causes a segmentation fault since, fread is trying to read to ptr (a NULL pointer)
+
+Fix:
+    Validate the value of ret_val->num_bytes by making sure it is positive
+
+
+crash2.gft
+
+Bug:
+    Value of arg1 is not checked for out of bounds access (line 31) in the switch case, case 0x01 (line 30) of animate function (line 16) in the giftcardreader file.
+
+Exploit:
+    Lack of bounds checking allows the rip value to be overwritten, using gdb, I found that there is 40 bytes between the regs address and the rip address.
+    Using the THX-1138 miroprocessor op codes, I rewrote the rip address to be 0x00000000. The specific hex codes in the crash2.gft that cause this are 
+
+    opcode  arg1    arg2
+    01      28      00
+    01      29      00
+    01      2A      00
+    01      2B      00
+    01      2C      00
+    01      2D      00
+    01      2E      00
+    01      2F      00
+
+    these instructions overwrite the rip value to the first 8 bytes of the message and that leads to a segmentation fault.
+
+Fix:
+    Bounds checking is required for index of regs array
+
+
+hang.gft
+
+Bug:
+    arg1 (line 56) is casted to a char after being declared as an unsigned char
+
+Exploit:
+    Since char is a signed value, we can send in 0xfd as the value for arg1, this decreases the value of pc pointer by 3 (line 56).
+    pc is incremented again by 3 (line 62), resetting the value causing the loop to execute forever.
+
+Fix:
+    arg1 needs to casted unsigned char (line 56) so pc doesn't move backwards.
