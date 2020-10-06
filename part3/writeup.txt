@@ -20,9 +20,19 @@ Fix:
 
 fuzzer2.gft
 
+Error:
+    giftcardreader was failing with the error
+    "Segmentation fault (core dumped)"
+
+    This is likely due to a part of the program trying to access inaccessible memory
+
 Bug:
-    
-Exploit:
-    
+    Looking up the details using gdb shows that the program is trying to access memory that isn't there
+    using bt full I got a backtrace and spotted that the error was due to the below, message parameter was pointing to an inaccessible address
+    'string = 0x8948c8458b48ffff <error: Cannot access memory at address 0x8948c8458b48ffff>'
+    'grouping = 0xffffffffffffffff <error: Cannot access memory at address 0xffffffffffffffff>'
+    The binary (fuzzer2.gft) running through the animate function many times, specifically the case '0x03' where it changes the mptr pointer many times.
+    This runs without a bounds check on mptr, as it's pointing to msg and msg is to be of 32 bytes maximum as per the specification.
+
 Fix:
-    
+    Added bounds checking for mptr (line 40) with the snippet " if (mptr < (msg + 31))" to keep mptr within its limits.

@@ -3,7 +3,7 @@ giftcardreader: giftcardreader.c giftcard.h
 
 all: giftcardreader test
 
-test: test0 test1 test2 test3 test4 test5 test6 test7
+test: test0 test1 test2 test3 test4 test5 test6 test7 test8
 
 test0: giftcardreader
 	./giftcardreader 1 examplefile.gft
@@ -28,6 +28,9 @@ test6: giftcardreader
 
 test7:
 	./giftcardreader 1 part3/fuzzer1.gft
+
+test8:
+	./giftcardreader 1 part3/fuzzer2.gft
 
 clean:
 	rm -rf giftcardreader giftcardreader.gcno giftcardreader.gcda giftcardreader.info giftcardreader_report
