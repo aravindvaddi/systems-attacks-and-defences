@@ -40,7 +40,7 @@ void animate(char *msg, unsigned char *program) {
                 mptr += (char)arg1;
                 break;
             case 0x04:
-                regs[arg2] = arg1;
+                if (arg2 >= 0 && arg2 <= 15) regs[arg2] = arg1;
                 break;
             case 0x05:
                 regs[arg1] ^= regs[arg2];

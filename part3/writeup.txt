@@ -1,0 +1,28 @@
+BUG WRITE UP
+
+fuzzer1.gft
+
+Note: Line numbers are as of this commit.
+
+Error: 
+    giftcardreader was failing with the error 
+    "*** stack smashing detected ***: terminated
+    Aborted (core dumped)"
+
+    This is likely due to a buffer overflow exploit present in the source
+
+Bug: 
+    Using gdb to debug, I located that the overflow was occuring due to lack of bounds checking in the switch case block, case '0x04' (line 43), arg2 was out of bounds with the value 30 and arg1 had a value 1.
+    This was overwriting addresses that were supposed to be unaccessible
+    
+Fix:
+    Added bounds checking for arg2 (line 43) with the snippet "if (arg2 >= 0 && arg2 <= 15)"
+
+fuzzer2.gft
+
+Bug:
+    
+Exploit:
+    
+Fix:
+    
