@@ -1,6 +1,6 @@
 # Systems: Attacks and Defences
 
-## The following tasks were performed
+## The following tasks were performed as part of an assignment for "Application Security" course at New York University
 
 ### Git & Travis CI (Part 1)
 
